@@ -1,0 +1,46 @@
+USE [JPLATFORM]
+GO
+
+/****** Object:  View [dbo].[FTH_009_STOK]    Script Date: 26.08.2022 13:58:16 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER VIEW [dbo].[FTH_009_STOK]
+AS
+
+SELECT
+ ITM.CODE [KODU],
+ ----------------------------------------------------------------------------------------------------------
+ ITM.DESCRIPTION [ADI],
+ ----------------------------------------------------------------------------------------------------------
+[CINSI] = (SELECT UNL.CODE FROM U_009_UNITS UNL WHERE UNL.UOMSETREF = ITM.UOMSETREF AND UNL.LINENR = 1),
+ ----------------------------------------------------------------------------------------------------------
+CAST((GNT.ONHAND - GNT.RESERVED) as int) [GERCEK STOK]
+ ----------------------------------------------------------------------------------------------------------
+
+FROM U_009_ITEMS ITM
+
+LEFT JOIN V_009_01_ITEMGENTOTS GNT ON GNT.ITEMREF = ITM.LOGICALREF  --GNT.INVENNO <>-1
+
+WHERE ITM.BOSTATUS = 0  AND ITM.CARDTYPE IN (1,10,11,12)-- AND ROUND (GNT.ONHAND),2)
+
+
+
+
+
+--SELECT UOMSETREF,* FROM U_009_ITEMS where CODE='253.01'
+--SELECT * FROM U_009_ITEMS where CODE='157.01.002'
+
+-- SELECT * FROM  V_009_01_ITEMGENTOTS
+--,ITM.SPECODE2 [ÖZELKODU2]
+--,ROUND(GNT.ONHAND,2) [FIILI STOK]
+--,ROUND(GNT.RESERVED,2) [REZERVE STOK]
+--,GNT.INVENNO [AMBARNO]
+--,CPI.NAME [AMBAR ADI]
+--LEFT JOIN L_CAPIWHOUSE CPI ON CPI.NR =GNT.INVENNO AND FIRMNR =009
+GO
+
+
