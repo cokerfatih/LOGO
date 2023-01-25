@@ -1,0 +1,50 @@
+USE [JPLATFORM]
+GO
+
+/****** Object:  View [dbo].[FTH_009_01_CARI_BAKIYE]    Script Date: 25.01.2023 14:25:27 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+ALTER  VIEW [dbo].[FTH_009_01_CARI_BAKIYE]
+AS
+SELECT     
+         --CLC.CARDTYPE AS Grup,
+   -------------------------------------------------------------------------------------------------------------------------------------------        
+		   CLC.CODE AS [Cari Kodu],
+   -------------------------------------------------------------------------------------------------------------------------------------------        
+		   CLC.DESCRIPTION AS [Cari Adı],
+   -------------------------------------------------------------------------------------------------------------------------------------------        
+          (SELECT     SUM(TBL.BORC - TBL.ALACAK) AS Expr1
+           FROM         TBL_NET_009_EXTRE  AS TBL
+           WHERE      (TBL.CH_REF = CLC.LOGICALREF) ) AS CariBakiyeTL,
+   -------------------------------------------------------------------------------------------------------------------------------------------        
+		  SLS.DESCRIPTION AS  [Satış Elemanı Adı],
+   -------------------------------------------------------------------------------------------------------------------------------------------        
+ (PAY.DESCRIPTION)[TANIMLI VADE]
+  -------------------------------------------------------------------------------------------------------------------------------------------        
+
+		   FROM   dbo.U_009_01_PAYTRANS AS PYT 
+           LEFT OUTER JOIN dbo.U_009_ARPS AS CLC ON PYT.ARPREF = CLC.LOGICALREF
+		   LEFT JOIN U_009_PAYPLANS PAY ON CLC.PAYMENTREF=PAY.LOGICALREF
+		   LEFT OUTER JOIN dbo.U_009_01_INVOICES AS INV ON PYT.SLIPREF = INV.LOGICALREF
+		    FULL JOIN dbo.U_009_ARPSLSMNASGS ASG ON CLC.LOGICALREF = ASG.ARPREF  
+			FULL JOIN dbo.U_009_SALESPERSONS SLS ON ASG.SALESMANREF = SLS.LOGICALREF
+
+
+
+           WHERE   (PYT.TOTAL - PYT.PAID > 0) AND (PYT.PAIDINCASH = 0) AND  CLC.AUXCODE5 IN ('') 
+
+
+
+
+GO
+
+
