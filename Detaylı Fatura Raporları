@@ -1,0 +1,250 @@
+USE [TIGER3]
+GO
+
+/****** Object:  View [dbo].[FTH_001_FATURA_RAPORLARI_DETAYLI]    Script Date: 7.02.2023 21:49:32 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-----ÇOK DETAYLI SATIŞ FATURASI-----
+
+ALTER VIEW [dbo].[FTH_001_FATURA_RAPORLARI_DETAYLI]
+AS
+SELECT
+------------------------------------------------------------------------------------------------------
+CASE
+  WHEN MAX(INV.TRCODE)=1 THEN '(01) Satınalma Faturası'
+  WHEN MAX(INV.TRCODE)=2 THEN '(02) Perakende Satış ıade Faturası'
+  WHEN MAX(INV.TRCODE)=3 THEN '(03) Toptan Satış ıade Faturası'
+  WHEN MAX(INV.TRCODE)=4 THEN '(04) Alınan Hizmet Faturası'
+  WHEN MAX(INV.TRCODE)=5 THEN '(05) Alınan Proforma Fatura'
+  WHEN MAX(INV.TRCODE)=6 THEN '(06) Satınalma ıade Faturası'
+  WHEN MAX(INV.TRCODE)=7 THEN '(07) Perakende Satış Faturası'
+  WHEN MAX(INV.TRCODE)=8 THEN '(08) Toptan Satış Faturası'
+  WHEN MAX(INV.TRCODE)=9 THEN '(09) Verilen Hizmet Faturası'
+  WHEN MAX(INV.TRCODE)=10 THEN '(10) Verilen Proforma Fatura'
+  WHEN MAX(INV.TRCODE)=13 THEN '(13) Satınalma Fiyat Farkı Faturası'
+  WHEN MAX(INV.TRCODE)=14 THEN '(14) Satış Fiyat Farkı Faturası'
+  WHEN MAX(INV.TRCODE)=26 THEN '(26) Müstahsil Makbuzu' END [Fatura Türü],
+------------------------------------------------------------------------------------------------------
+  MAX(INV.FICHENO) [Fatura No],
+------------------------------------------------------------------------------------------------------
+  MAX(STFICHE.FICHENO) [İrsaliye No],
+------------------------------------------------------------------------------------------------------
+  MAX(INV.DATE_) [Fatura Tarihi],
+------------------------------------------------------------------------------------------------------
+--MAX(INV.DOCODE) [Belge No],
+------------------------------------------------------------------------------------------------------
+  MAX(CLC.CODE) [Cari Kodu],
+------------------------------------------------------------------------------------------------------
+  MAX(CLC.DEFINITION_) [Cari Ünvanı],
+------------------------------------------------------------------------------------------------------
+  MAX(CLC.TAXOFFICE)[Vergi Dairesi],
+------------------------------------------------------------------------------------------------------
+  MAX(CLC.TAXNR)[Vergi No],
+------------------------------------------------------------------------------------------------------
+--MAX(ISNULL(PRJ.CODE,'')) [Proje Kodu],
+--MAX(ISNULL(PRJ.NAME,'')) [Proje Açıklaması],
+--MAX(ISNULL(SLSM.DEFINITION_,'')) [Müşteri Temsilcisi],
+--MAX(ISNULL(TRDGRP.GDEF,'')) [Ticari ışlem Grubu],
+--CASE WHEN MAX(PAYLN.GUN) > 0 THEN DATEADD(DAY,MAX(PAYLN.GUN),MAX(INV.DATE_))
+--WHEN MAX(PAYLN.AY)     > 0 THEN DATEADD(MONTH,MAX(PAYLN.AY),MAX(INV.DATE_))
+--WHEN MAX(PAYLN.YIL) > 0 THEN DATEADD(YEAR,MAX(PAYLN.YIL),MAX(INV.DATE_)) 
+--WHEN MAX(PAYLN.GUN) IS NULL OR MAX(PAYLN.AY) IS NULL OR MAX(PAYLN.YIL) IS NULL THEN MAX(INV.DATE_) END [Ödeme Tarihi],
+------------------------------------------------------------------------------------------------------
+  CASE MAX(ITM.CARDTYPE) WHEN 4 THEN '(SK)' WHEN 12 THEN '(MM)' WHEN 10 THEN '(HM)' WHEN 1 THEN '(TM)' WHEN 11 THEN '(YM)' ELSE '(TANIMSIZ)' END [Malzeme Türü],
+------------------------------------------------------------------------------------------------------
+  CASE WHEN MAX(STL.LINETYPE) IN(0,6,7,8,9) THEN MAX(ITM.CODE) WHEN MAX(STL.LINETYPE)=4 THEN MAX(SRV.CODE) END [Malzeme Kodu],
+------------------------------------------------------------------------------------------------------
+  CASE WHEN MAX(STL.LINETYPE) IN(0,6,7,8,9) THEN MAX(ITM.NAME) WHEN MAX(STL.LINETYPE)=4 THEN MAX(SRV.DEFINITION_) END [Malzeme Adı],
+------------------------------------------------------------------------------------------------------
+  MAX(MRK.DESCR) [Marka],
+------------------------------------------------------------------------------------------------------
+--MAX(ITM.SPECODE) [Mlz Özel Kodu],
+--MAX(ITM.SPECODE2) [Mlz Özel Kod 2],
+--MAX(ITM.SPECODE3) [Mlz Özel Kod 3],
+--MAX(ITM.SPECODE4) [Mlz Özel Kod 4],
+--MAX(ITM.SPECODE5) [Mlz Özel Kod 5],
+  ISNULL(MAX(SP.DEFINITION_),'') [Mlz ÖK Açıklama],
+------------------------------------------------------------------------------------------------------
+  ISNULL(MAX(SP2.DEFINITION_),'') [Mlz ÖK2 Açıklama],
+------------------------------------------------------------------------------------------------------
+  ISNULL(MAX(SP3.DEFINITION_),'') [Mlz ÖK3 Açıklama],
+------------------------------------------------------------------------------------------------------
+  ISNULL(MAX(SP4.DEFINITION_),'') [Mlz ÖK4 Açıklama],
+------------------------------------------------------------------------------------------------------
+--ISNULL(MAX(SP5.DEFINITION_),'') [Mlz ÖK5 Açıklama],
+------------------------------------------------------------------------------------------------------
+--MAX(ITM.STGRPCODE) [Malzeme Grup Kodu],
+------------------------------------------------------------------------------------------------------
+  MAX(ITM.PRODUCERCODE) [Malzeme Üretici Kodu],
+------------------------------------------------------------------------------------------------------
+--ISNULL(MAX(DEFN.TEXTFLDS1),'') [Kırılım 1],
+--ISNULL(MAX(DEFN.TEXTFLDS2),'') [Kırılım 2],
+--ISNULL(MAX(DEFN.TEXTFLDS3),'') [Kırılım 3],
+--ISNULL(MAX(DEFN.TEXTFLDS4),'') [Kırılım 4],
+--ISNULL(MAX(DEFN.TEXTFLDS5),'') [Kırılım 5 (Sezon)],
+--ISNULL(MAX(DEFN.NUMFLDS7),0) [Kırılım 7 (Maliyet)],
+------------------------------------------------------------------------------------------------------    
+--CASE MAX(ITM.ACTIVE) WHEN 0 THEN 'Kullanımda' WHEN 1 THEN 'Kullanım Dışı' ELSE 'Tanımsız' END [Malzeme Durumu],
+  CASE WHEN MAX(STL.TRCODE) IN(2,3) THEN MAX(STL.AMOUNT)*-1 ELSE MAX(STL.AMOUNT)END [Miktar],
+------------------------------------------------------------------------------------------------------
+  MAX(USL.NAME) [Birim],
+------------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------TL----------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+  MAX(STL.PRICE) [Birim Fiyat TL],
+------------------------------------------------------------------------------------------------------
+--MAX(STL.LINENET)/MAX(STL.AMOUNT) [Net Birim Fiyat TL],
+------------------------------------------------------------------------------------------------------
+  CASE WHEN MAX(STL.TRCODE) IN(2,3) THEN (MAX(STL.TOTAL)-ISNULL(MAX(STL.DISTDISC),0))*-1 ELSE MAX(STL.TOTAL)-ISNULL(MAX(STL.DISTDISC),0) END [Net Satır Tutarı TL],
+------------------------------------------------------------------------------------------------------
+  MAX(STL.VATAMNT) [Kdv Tutarı TL],
+------------------------------------------------------------------------------------------------------
+  MAX(STL.VAT) [Kdv Oranı %],
+------------------------------------------------------------------------------------------------------
+--MAX(STL.DISTDISC) [Satır ındirim Tutarı TL],
+------------------------------------------------------------------------------------------------------
+ MAX(STL.VATMATRAH) + (STL.VATAMNT) [Toplam Tutarı TL],
+------------------------------------------------------------------------------------------------------
+
+
+
+
+------------------------------------------İŞLEM DÖVİZİ------------------------------------------------
+  CASE MAX(STL.TRCURR) WHEN 0 THEN 'TL' ELSE MAX(CURR.CURCODE) END [İşlem Döviz Türü],
+------------------------------------------------------------------------------------------------------
+  MAX(STL.TRRATE)[İşlem Döviz Kuru],
+------------------------------------------------------------------------------------------------------
+--CASE MAX(STL.TRRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.PRICE)/MAX(STL.TRRATE)) END [Brüt Birim Fiyat ı.D.],
+------------------------------------------------------------------------------------------------------
+  CASE MAX(STL.TRRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.LINENET)/MAX(STL.AMOUNT)/MAX(STL.TRRATE)) END [İşlem Dövizi Birim Fiyat],
+------------------------------------------------------------------------------------------------------
+--CASE MAX(STL.TRRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.TOTAL)/MAX(STL.TRRATE)) END [Brüt Satır Tutarı ı.D.],
+------------------------------------------------------------------------------------------------------
+  CASE MAX(STL.TRRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.LINENET)/MAX(STL.TRRATE)) END [İşlem Dövizi Net Tutar],
+------------------------------------------------------------------------------------------------------
+  CASE MAX(STL.TRRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.VATAMNT)/MAX(STL.TRRATE)) END [İşlem Dövizi Kdv Tutarı],
+------------------------------------------------------------------------------------------------------
+  CASE STL.TRRATE WHEN 0 THEN 0 ELSE (STL.TOTAL / STL.TRRATE) + (STL.VATAMNT / STL.TRRATE)  END [İşlem Dövizi Toplam Tutar],
+------------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------RAPORLAMA DÖVİZİ--------------------------------------------
+  CASE MAX(STL.PRCURR) WHEN 0 THEN 'USD'  ELSE 'USD' END [Raporlama Döviz Türü],
+------------------------------------------------------------------------------------------------------
+  MAX(STL.REPORTRATE) [Raporlama Döviz Kuru],
+------------------------------------------------------------------------------------------------------
+  CASE MAX(STL.REPORTRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.LINENET)/MAX(STL.AMOUNT)/MAX(STL.REPORTRATE)) END [Raporlama Birim Fiyat],
+------------------------------------------------------------------------------------------------------
+--CASE MAX(STL.TRRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.TOTAL)/MAX(STL.TRRATE)) END [Brüt Satır Tutarı ı.D.],
+------------------------------------------------------------------------------------------------------
+  CASE MAX(STL.REPORTRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.LINENET)/MAX(STL.REPORTRATE)) END [Raporlama Net Tutar],
+------------------------------------------------------------------------------------------------------
+  CASE MAX(STL.REPORTRATE) WHEN 0 THEN 0 ELSE CONVERT(DECIMAL(28,4),MAX(STL.VATAMNT)/MAX(STL.REPORTRATE)) END [Raporlama Kdv Tutarı],
+------------------------------------------------------------------------------------------------------
+  CASE STL.REPORTRATE WHEN 0 THEN 0 ELSE (STL.TOTAL / STL.REPORTRATE) + (STL.VATAMNT / STL.REPORTRATE)  END [Raporlama Toplam Tutar],
+------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------DEVAMI-----------------------------------------------------
+  CLC.COUNTRY [Cari Hesap Ülke],
+------------------------------------------------------------------------------------------------------
+  CLC.CITY [Cari Hesap İl],
+------------------------------------------------------------------------------------------------------
+  CLC.TOWN [Cari Hesap İlçe],
+------------------------------------------------------------------------------------------------------
+  CLC.ADDR1 [Cari Hesap Adres],
+------------------------------------------------------------------------------------------------------
+  INV.SHPAGNCOD [Nakliye Firması],
+------------------------------------------------------------------------------------------------------
+  SLS.DEFINITION_[Satış Temsilcisi]
+------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FROM 
+      LG_001_01_INVOICE INV INNER JOIN
+      LG_001_01_STLINE STL ON STL.INVOICEREF=INV.LOGICALREF LEFT OUTER JOIN
+            LG_001_01_STFICHE STFICHE ON STFICHE.LOGICALREF=STL.STFICHEREF LEFT OUTER JOIN 
+      LG_001_ITEMS ITM ON STL.STOCKREF=ITM.LOGICALREF LEFT OUTER JOIN
+      LG_001_SRVCARD SRV ON STL.STOCKREF=SRV.LOGICALREF INNER JOIN
+      LG_001_CLCARD CLC ON INV.CLIENTREF=CLC.LOGICALREF 
+     LEFT JOIN dbo.LG_SLSMAN SLS ON INV.SALESMANREF = SLS.LOGICALREF LEFT OUTER JOIN
+      LG_001_PROJECT PRJ ON INV.PROJECTREF=PRJ.LOGICALREF LEFT OUTER JOIN
+      LG_001_DEFNFLDSCARDV DEFN ON ITM.LOGICALREF=DEFN.PARENTREF LEFT OUTER JOIN
+      L_TRADGRP TRDGRP ON INV.TRADINGGRP=TRDGRP.GCODE INNER JOIN
+      LG_001_UNITSETF USF ON ITM.UNITSETREF=USF.LOGICALREF INNER JOIN
+      LG_001_UNITSETL USL ON USF.LOGICALREF=USL.UNITSETREF LEFT OUTER JOIN
+      LG_001_PRCLIST PRCL ON ITM.LOGICALREF=PRCL.CARDREF LEFT OUTER JOIN
+      L_CURRENCYLIST CURR ON STL.TRCURR=CURR.CURTYPE AND CURR.FIRMNR=003 LEFT OUTER JOIN
+      LG_001_SPECODES SP ON SP.SPECODE=ITM.SPECODE AND SP.SPETYP1=1 LEFT OUTER JOIN
+      LG_001_SPECODES SP2 ON SP2.SPECODE=ITM.SPECODE2 AND SP2.SPETYP2=1 LEFT OUTER JOIN
+      LG_001_SPECODES SP3 ON SP3.SPECODE=ITM.SPECODE3 AND SP3.SPETYP3=1 LEFT OUTER JOIN
+      LG_001_SPECODES SP4 ON SP4.SPECODE=ITM.SPECODE4 AND SP4.SPETYP4=1 LEFT OUTER JOIN
+      LG_001_SPECODES SP5 ON SP5.SPECODE=ITM.SPECODE5 AND SP5.SPETYP5=1 LEFT OUTER JOIN
+      LG_001_MARK MRK ON MRK.LOGICALREF=ITM.MARKREF LEFT OUTER JOIN
+      (SELECT PAYLN.PAYPLANREF,
+            CASE WHEN ISNULL(PAYLN.DAY_,'')<>'' THEN SUBSTRING(PAYLN.DAY_,2,LEN(PAYLN.DAY_)-1) ELSE 0 END GUN,
+            CASE WHEN ISNULL(PAYLN.MOUNTH,'')<>'' THEN SUBSTRING(PAYLN.MOUNTH,2,LEN(PAYLN.MOUNTH)-1) ELSE 0 END AY,
+            CASE WHEN ISNULL(PAYLN.YEAR_,'')<>'' THEN SUBSTRING(PAYLN.YEAR_,2,LEN(PAYLN.YEAR_)-1) ELSE 0 END YIL
+      FROM LG_001_PAYLINES PAYLN) PAYLN ON INV.PAYDEFREF=PAYLN.PAYPLANREF
+WHERE 
+      INV.CANCELLED = 0
+GROUP BY 
+      STL.LOGICALREF,
+	  STL.VATAMNT,
+	  STL.PRICE,
+	  STL.VATMATRAH,
+	  CLC.COUNTRY,
+	  CLC.CITY,
+	  CLC.TOWN,
+	  CLC.ADDR1,
+	  INV.SHPAGNCOD,
+	  SLS.DEFINITION_,
+	  STL.TRRATE,
+	  STL.LINENET,
+	  STL.VAT,
+	  STL.TOTAL,
+	  STL.REPORTRATE
+
+
+
+
+
+
+
+
+
+
+
+GO
+
+
