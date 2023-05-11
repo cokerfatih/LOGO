@@ -1,0 +1,43 @@
+SELECT
+CLIENTREF
+,DATE_
+,CODE
+,Bakiye= SUM(ISNULL((CASE SIGN WHEN 0 THEN SUM(AMOUNT) END),0)-ISNULL((CASE SIGN WHEN 1 THEN SUM(AMOUNT) END),0)) OVER(ORDER BY F.DATE_, F.LOGICALREF)
+FROM LG_102_04_CLFLINE F LEFT JOIN LG_102_CLCARD L ON F.CLIENTREF=L.LOGICALREF
+WHERE CODE='33'
+GROUP BY SIGN,DATE_,F.LOGICALREF,CLIENTREF,CODE
+ORDER BY F.CLIENTREF
+==========================================================
+SELECT HAREKET.LOGICALREF, HAREKET.DATE_, HAREKET.TRANNO AS DOCODE,
+CASE HAREKET.TRCODE WHEN 1 THEN 'Nakit Tahsilat' WHEN 2 THEN 'Nakit Ödeme' WHEN 3 THEN 'Borç Dekontu' WHEN 4 THEN 'Alacak Dekontu' WHEN 5 THEN 'Virman Fişi'
+WHEN 6 THEN 'Kur Farkı Fişi' WHEN 12 THEN 'Özel Fiş' WHEN 14 THEN 'Açılış Fişi' WHEN 20 THEN 'Gelen Havale' WHEN 21 THEN 'Gönderilen Havale' WHEN 24 THEN
+'Döviz Alış Belgesi' WHEN 25 THEN 'Döviz Satış belgesi' WHEN 28 THEN 'Alınan Hizmet Faturası' WHEN 29 THEN 'Verilen Hizmet Faturası' WHEN 31 THEN 'Satın Alma Faturası'
+WHEN 32 THEN 'Perakende Satış İade Faturası' WHEN 33 THEN 'Toptan Satış İade Faturası' WHEN 34 THEN 'Alınan Hizmet Faturası' WHEN 35 THEN 'Alınan Proforma Fatura'
+WHEN 36 THEN 'Satın Alma İade Faturası' WHEN 37 THEN 'Perakende Satış Faturası' WHEN 38 THEN 'Toptan Satış Faturası' WHEN 39 THEN 'Verilen Hizmet Faturası'
+WHEN 40 THEN 'Verilen proforma fatura' WHEN 41 THEN 'Verilen Vade Farkı Faturası' WHEN 42 THEN 'Alınan Vade Farkı Faturası' WHEN 43 THEN 'Satın Alma Fiyat Farkı Faturası'
+WHEN 44 THEN 'Satış Fiyat Farkı Faturası' WHEN 45 THEN 'Verilen Serbest Meslek Makbuzu' WHEN 46 THEN 'Alınan Serbest Meslek Makbuzu' WHEN 56 THEN 'Müstahsil Makbuzu'
+WHEN 61 THEN 'Çek Girişi' WHEN 62 THEN 'Senet Girişi' WHEN 63 THEN 'Çek Çıkışı (Cari Hesaba)' WHEN 64 THEN 'Senet Çıkışı (Cari Hesaba)' WHEN 70 THEN 'Kredi Kartı Fişi'
+WHEN 71 THEN 'Kredi Kartı İade Fişi' WHEN 72 THEN 'Firma Kredi Kartı Fişi' WHEN 73 THEN 'Firma Kredi Kartı İade Fişi' WHEN 81 THEN 'Satınalma Siparişi' WHEN 82
+THEN 'Satış Siparişi' END AS TRCODE, KART.CODE, KART.DEFINITION_, HAREKET.LINEEXP AS ACIKLAMA, ISNULL((1 - HAREKET.SIGN) * HAREKET.AMOUNT, '0')
+AS BORC, ISNULL(HAREKET.SIGN * HAREKET.AMOUNT, '0') AS ALACAK, (1 - HAREKET.SIGN)
+* HAREKET.AMOUNT - HAREKET.SIGN * HAREKET.AMOUNT AS FARK
+FROM TGRDB.dbo.LG_027_01_CLFLINE AS HAREKET INNER JOIN
+TGRDB.dbo.LG_027_CLCARD AS KART ON HAREKET.CLIENTREF = KART.LOGICALREF
+WHERE (HAREKET.CANCELLED = 0)
+==================================================================
+SELECT HAREKET.LOGICALREF, HAREKET.DATE_, HAREKET.TRANNO AS DOCODE,
+CASE HAREKET.TRCODE WHEN 1 THEN 'Nakit Tahsilat' WHEN 2 THEN 'Nakit Ödeme' WHEN 3 THEN 'Borç Dekontu' WHEN 4 THEN 'Alacak Dekontu' WHEN 5 THEN 'Virman Fişi'
+WHEN 6 THEN 'Kur Farkı Fişi' WHEN 12 THEN 'Özel Fiş' WHEN 14 THEN 'Açılış Fişi' WHEN 20 THEN 'Gelen Havale' WHEN 21 THEN 'Gönderilen Havale' WHEN 24 THEN
+'Döviz Alış Belgesi' WHEN 25 THEN 'Döviz Satış belgesi' WHEN 28 THEN 'Alınan Hizmet Faturası' WHEN 29 THEN 'Verilen Hizmet Faturası' WHEN 31 THEN 'Satın Alma Faturası'
+WHEN 32 THEN 'Perakende Satış İade Faturası' WHEN 33 THEN 'Toptan Satış İade Faturası' WHEN 34 THEN 'Alınan Hizmet Faturası' WHEN 35 THEN 'Alınan Proforma Fatura'
+WHEN 36 THEN 'Satın Alma İade Faturası' WHEN 37 THEN 'Perakende Satış Faturası' WHEN 38 THEN 'Toptan Satış Faturası' WHEN 39 THEN 'Verilen Hizmet Faturası'
+WHEN 40 THEN 'Verilen proforma fatura' WHEN 41 THEN 'Verilen Vade Farkı Faturası' WHEN 42 THEN 'Alınan Vade Farkı Faturası' WHEN 43 THEN 'Satın Alma Fiyat Farkı Faturası'
+WHEN 44 THEN 'Satış Fiyat Farkı Faturası' WHEN 45 THEN 'Verilen Serbest Meslek Makbuzu' WHEN 46 THEN 'Alınan Serbest Meslek Makbuzu' WHEN 56 THEN 'Müstahsil Makbuzu'
+WHEN 61 THEN 'Çek Girişi' WHEN 62 THEN 'Senet Girişi' WHEN 63 THEN 'Çek Çıkışı (Cari Hesaba)' WHEN 64 THEN 'Senet Çıkışı (Cari Hesaba)' WHEN 70 THEN 'Kredi Kartı Fişi'
+WHEN 71 THEN 'Kredi Kartı İade Fişi' WHEN 72 THEN 'Firma Kredi Kartı Fişi' WHEN 73 THEN 'Firma Kredi Kartı İade Fişi' WHEN 81 THEN 'Satınalma Siparişi' WHEN 82
+THEN 'Satış Siparişi' END AS TRCODE, KART.CODE, KART.DEFINITION_ AS CARİ_HESAP_ÜNVANI, HAREKET.LINEEXP AS ACIKLAMA, ISNULL((1 - HAREKET.SIGN) * HAREKET.AMOUNT, '0')
+AS BORC, ISNULL(HAREKET.SIGN * HAREKET.AMOUNT, '0') AS ALACAK, (1 - HAREKET.SIGN)
+* HAREKET.AMOUNT - HAREKET.SIGN * HAREKET.AMOUNT AS BAKİYE
+FROM ERCAGLAYAN_GO3.dbo.LG_102_04_CLFLINE AS HAREKET INNER JOIN
+LOGO_GO3.dbo.LG_102_CLCARD AS KART ON HAREKET.CLIENTREF = KART.LOGICALREF
+WHERE (HAREKET.CANCELLED = 0)
