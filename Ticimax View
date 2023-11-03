@@ -1,0 +1,68 @@
+/****** Object:  View [dbo].[TICIMAX_LOGOTIGER_ITEMS_LIST]    Script Date: 12.01.2023 11:25:07 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE VIEW [dbo].[TICIMAX_LOGOTIGER_ITEMS_LIST] AS
+SELECT      
+			   SpecCode=  ITM.SPECODE
+			  ,SpecCode2= ITM.SPECODE2 
+			  ,SpecCode3=ITM.SPECODE3
+			  ,SpecCode4=ITM.SPECODE4
+			  ,SpecCode5=ITM.SPECODE5
+			  ,ProductCode= ITM.CODE 
+			  ,ProductName=ITM.NAME 
+			  ,ProductName2=ITM.NAME2 
+			  ,VariantRef=VRNT.LOGICALREF
+              ,VariantCode=VRNT.CODE 
+			  ,Barcode=BARCODE.BARCODE
+			  ,ProductId=ITM.LOGICALREF
+			  ,Size=(SELECT     VAL.NAME
+                               FROM            dbo.LG_221_VRNTCHARASGN AS ASGN INNER JOIN
+                                                         dbo.LG_221_CHARCODE AS CODE ON ASGN.CHARCODEREF = CODE.LOGICALREF INNER JOIN
+                                                         dbo.LG_221_CHARVAL AS VAL ON ASGN.CHARVALREF = VAL.LOGICALREF
+                               WHERE        (ASGN.ITEMREF = ITM.LOGICALREF) AND (ASGN.VARIANTREF = VRNT.LOGICALREF) AND (CODE.CODE IN ('EC', 'KB', 'EB', 'KC')))
+			   ,Color=(SELECT        VAL.NAME
+                               FROM            dbo.LG_221_VRNTCHARASGN AS ASGN INNER JOIN
+                                                         dbo.LG_221_CHARCODE AS CODE ON ASGN.CHARCODEREF = CODE.LOGICALREF INNER JOIN
+                                                         dbo.LG_221_CHARVAL AS VAL ON ASGN.CHARVALREF = VAL.LOGICALREF
+                               WHERE        (ASGN.ITEMREF = ITM.LOGICALREF) AND (ASGN.VARIANTREF = VRNT.LOGICALREF) AND (CODE.CODE LIKE '%RENK%'))
+              ,SizeOptionName='Beden'
+              ,ColorOptionName='Renk'
+			  --,Quantity=''Miktar bilgisini burdan �ekilmesini isterseniz buna g�re ayarlaman�z gerekir''
+              ,ModelCode=ITM.CODE
+			  ,VAT=ITM.VAT
+			  ,MarkCode = M.CODE
+			  ,MarkDefinition = M.DESCR
+			  ,ITM.CAPIBLOCK_MODIFIEDDATE
+			  ,LASTPRICEDATE=isnull(( SELECT top 1 PR.CAPIBLOCK_MODIFIEDDATE FROM LG_221_PRCLIST AS PR WHERE PR.CARDREF=ITM.LOGICALREF order by PR.CAPIBLOCK_MODIFIEDDATE DESC ),ITM.CAPIBLOCK_MODIFIEDDATE)
+			  ,LASTSTOCKDATE=isnull(( SELECT top 1 c.CAPIBLOCK_MODIFIEDDATE FROM LG_221_01_STFICHE AS c inner join LG_221_01_STLINE as cl on c.LOGICALREF=cl.STFICHEREF and cl.STOCKREF=ITM.LOGICALREF order by c.CAPIBLOCK_MODIFIEDDATE desc ),ITM.CAPIBLOCK_MODIFIEDDATE)
+			--,ThirdVariant='' (3. varyant �zelliklerinin se�ilece�i alan�n sorgusunun yaz�laca�� aland�r.)
+			--,ThirdVariantOptionName='' (3. varyant grup ad�n�n yaz�laca�� aland�r.)
+			--,FourthVariant='' (4. varyant �zelliklerinin se�ilece�i alan�n sorgusunun yaz�laca�� aland�r.)
+			--,FourthVariantOptionName='' (4. varyant grup ad�n�n yaz�laca�� aland�r.)
+			--,FifthVariant='' (5. varyant �zelliklerinin se�ilece�i alan�n sorgusunun yaz�laca�� aland�r.)
+			--,FifthVariantOptionName='' (5. varyant grup ad�n�n yaz�laca�� aland�r.)
+			--,SixthVariant='' (6. varyant �zelliklerinin se�ilece�i alan�n sorgusunun yaz�laca�� aland�r.)
+			--,SixthVariantOptionName='' (6. varyant grup ad�n�n yaz�laca�� aland�r.)
+			--,SeventhVariant='' (7. varyant �zelliklerinin se�ilece�i alan�n sorgusunun yaz�laca�� aland�r.)
+			--,SeventhVariantOptionName='' (7. varyant grup ad�n�n yaz�laca�� aland�r.)
+
+			--Entegrasyon program�m�z �zerinden Logo Tiger fiyat gruplar�na g�re fiyat e�le�tirmesi yapabilmektesiniz, fiyat gruplar� harici bir alandan fiyat tan�mlamas� yapmak istiyorsan�z a�a��daki alanlar� doldurarak �ekilmesini istedi�iniz veriye g�re ayarlayabilirsiniz.
+			--,CURRENCY=''
+			--,PRICE=''
+			--,INCVAT=''
+			--,DISCOUNTPRICE=''
+			--,PURCHASEPRICE=''
+
+FROM            dbo.LG_221_ITEMS AS ITM LEFT JOIN
+                         dbo.LG_221_VARIANT AS VRNT ON ITM.LOGICALREF = VRNT.ITEMREF LEFT OUTER JOIN
+                         dbo.LG_221_01_VRNTINVTOT AS TOTTBL ON ITM.LOGICALREF = TOTTBL.STOCKREF AND VRNT.LOGICALREF = TOTTBL.VARIANTREF AND TOTTBL.INVENNO = - 1  LEFT OUTER JOIN
+                         dbo.LG_221_UNITBARCODE AS BARCODE ON ITM.LOGICALREF = BARCODE.ITEMREF AND VRNT.LOGICALREF = BARCODE.VARIANTREF 
+						 LEFT JOIN LG_221_MARK AS M ON M.LOGICALREF = ITM.MARKREF
+WHERE        1=1
+GO
