@@ -1,0 +1,178 @@
+SYS’de girilen tanımlı ve zorunlu alanlar ile ilgili bilgi ve örnekler aşağıdadır;
+
+ 
+
+
+L_DEFNFLDSD    :SYS’de tanımlanan alanların tutulduğu tablodur.
+
+MODULENR        : Hangi modüle ait tanımlı alan olduğunu gösterir. (Fatura 4 , Malzeme Kartı 6)
+
+LEVEL_              : Ek alanın türünü gösterir      (0 – Başlık ek alanı, 1 – Satır ek alanı)
+
+NR                      : Ek alan numarası
+
+TYP                    : Veri tipi (1 – Metin, 2 – Sayısal, 3 – Liste, 4 – Tarih)
+
+L_MANDFLDS     : SYS’de tanımlanan alanların Zorunlu olup olmadığını gösteren tablo. (MANDATORY=1 ise zorunlu alan)
+
+LG_CATEGLISTS  : Liste seçimli alanlarda liste içeriği bu tabloda tutuluyor.
+
+LG_002_DEFNFLDSCARDV       : Kartlardaki tanımlı alanların tutulduğu tablodur. (Malzeme Kartı, Cari Hesap Kartı, Muhasebe Hesap Kartı)
+
+LG_002_01_DEFNFLDSTRANV  : Fiş ve fiş satırlarındaki tanımlı alanların tutulduğu tablodur. (Fatura,İrsaliye,Sipariş,Malzeme Fişleri,Muhasebe Fişleri)
+
+ 
+
+Kart ve fişlerde girilen bilgiler DEFNFLDSTRANV,DEFNFLDSCARDV tablolarındaki TEXTFLD1,TEXTFLD2,TEXTFLD3,…. tablolarında tutulmaktadır.
+
+Diğer TEXTFLD ve NUMFLD ile başlayan alanlar girdiğimiz verileri tutuyor.
+
+ 
+
+ 
+
+———————————————————————————————————————————–
+
+FATURA TANIMLI ALAN;
+
+Fatura tanımlı alanları L_DEFNFLDSD tablosunda tutulmaktadır.
+
+MODULENR :4 – Fatura
+
+INVAICE Tablosundaki LOGICALREF alanı DEFNFLDSD Tablosundaki  PARENTREF alanına eşittir.
+
+ÖRNEK:
+
+– _SQLINFO(“TEXTFLDS1″,”LG_001_01_DEFNFLDSTRANV”,”MODULENR=4 AND PARENTREF='”+STR(R23.logicalRef)+”‘”)
+
+ 
+
+————————————————————————————————————————————-
+
+CARİ HESAP KARTI TANIMLI ALAN;
+
+ 
+
+Cari Hesap Kartı tanımlı alanlar LG_001_DEFNFLDSCARDV  tablosunda tutulmaktadır.
+
+MODULENR :5
+
+CLCARD Tablosundaki LOGICALREF alanı DEFNFLDSCARDV Tablosundaki  PARENTREFalanına eşittir.
+
+ÖRNEK:
+
+_SQLINFO(“TEXTFLDS1″,”LG_001_DEFNFLDSCARDV”,”MODULENR=5 AND PARENTREF='”+STR(R1.logicalRef)+”‘”)
+
+ 
+
+———————————————————————————————————————————–
+
+MALZEME KARTI TANIMLI ALAN;
+
+Malzeme Kartı tanımlı alanlar LG_001_DEFNFLDSCARDV  tablosunda tutulmaktadır.
+
+MODULENR :6
+
+ITEMS Tablosundaki LOGICALREF alanı DEFNFLDSCARDV Tablosundaki  PARENTREFalanına eşittir.
+
+ÖRNEK:
+
+_SQLINFO(“TEXTFLDS1″,”LG_001_DEFNFLDSCARDV”,”MODULENR=6 AND PARENTREF='”+STR(R1.logicalRef)+”‘”)
+
+ 
+
+——————————————————————————————————————————-
+
+MALZEME  FİŞİ TANIMLI ALAN;
+
+Muhasebe Fişi tanımlı alanlar LG_001_01_DEFNFLDSTRANV  tablosunda tutulmaktadır.
+
+MODULENR :2
+
+STFICHE Tablosundaki LOGICALREF alanı DEFNFLDSTRANV Tablosundaki  PARENTREFalanına eşittir.
+
+ÖRNEK:
+
+_SQLINFO(“TEXTFLDS1″,”LG_001_01_DEFNFLDSTRANV”,”MODULENR=2 AND PARENTREF='”+STR(R2.logicalRef)+”‘”)
+
+ 
+
+——————————————————————————————————————————-
+
+MUHASEBE HESAP PLAN KARTI TANIMLI ALAN;
+
+Muhasebe Hesap Kartı tanımlı alanlar LG_001_DEFNFLDSCARDV  tablosunda tutulmaktadır.
+
+MODULENR :3
+
+EMUHACC Tablosundaki LOGICALREF alanı DEFNFLDSCARDV Tablosundaki  PARENTREFalanına eşittir.
+
+ÖRNEK:
+
+_SQLINFO(“TEXTFLDS1″,”LG_001_DEFNFLDSCARDV”,”MODULENR=3 AND PARENTREF='”+STR(R1.logicalRef)+”‘”)
+
+ 
+
+—————————————————————————————————————————–
+
+MUHASEBE FİŞİ TANIMLI ALAN;
+
+Muhasebe Fişi tanımlı alanlar LG_001_01_DEFNFLDSTRANV  tablosunda tutulmaktadır.
+
+MODULENR :7
+
+EMFICHE Tablosundaki LOGICALREF alanı DEFNFLDSTRANV Tablosundaki  PARENTREFalanına eşittir.
+
+ÖRNEK:
+
+_SQLINFO(“TEXTFLDS1″,”LG_001_01_DEFNFLDSTRANV”,”MODULENR=7 AND PARENTREF='”+STR(R1.logicalRef)+”‘”)
+
+ 
+
+FİŞ SATIRLARI İÇİN
+
+_SQLINFO(“TEXTFLDS1″,”LG_003_01_DEFNFLDSTRANV”,”MODULENR=7 AND OWNERREF='”+STR(R2.logicalRef)+”‘”)
+
+ 
+
+—————————————————————————————————————————-
+
+İRSALİYE TANIMLI ALANLAR;
+
+İrsaliye Fişlerindeki tanımlı alanlar LG_001_01_DEFNFLDSTRANV tablosunda tutulmaktadır.
+
+MODULENR:9
+
+STFICHE Tablosundaki LOGICALREF alanı DEFNFLDSTRANV Tablosundaki  PARENTREFalanına eşittir.
+
+ÖRNEK:
+
+_SQLINFO(“TEXTFLDS1″,”LG_001_01_DEFNFLDSTRANV”,”MODULENR=9 AND PARENTREF='”+STR(R2.logicalRef)+”‘”)
+
+————————————————————————————————————————–
+
+FATURA İÇERİSİNDE İRSALİYE TANIMLI ALANLAR;
+
+İrsaliye Fişlerindeki tanımlı alanlar LG_001_01_DEFNFLDSTRANV tablosunda tutulmaktadır.
+
+MODULENR:9
+
+STFICHE Tablosundaki LOGICALREF alanı DEFNFLDSTRANV Tablosundaki  PARENTREFalanına eşittir.
+
+ÖRNEK:
+
+_SQLINFO(“D.TEXTFLDS1”,”LG_001_01_DEFNFLDSTRANV D, LG_001_01_STFICHE S “,”D.MODULENR=9 AND D.PARENTREF=S.LOGICALREF AND S.INVOICEREF='”+STR(R23.logicalRef)+”‘”)
+
+————————————————————————————————————————-
+
+SİPARİŞ TANIMLI ALANLAR;
+
+Sipariş Fişlerindeki tanımlı alanlar LG_001_01_DEFNFLDSTRANV tablosunda tutulmaktadır.
+
+MODULENR:8
+
+ORFICHE Tablosundaki LOGICALREF alanı DEFNFLDSTRANV Tablosundaki  PARENTREFalanına eşittir.
+
+ÖRNEK:
+
+_SQLINFO(“TEXTFLDS1″,”LG_001_01_DEFNFLDSTRANV”,”MODULENR=8 AND PARENTREF='”+STR(R2.logicalRef)+”‘”)
