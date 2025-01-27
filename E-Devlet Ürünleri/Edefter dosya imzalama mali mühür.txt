@@ -1,0 +1,26 @@
+KESİN ÇÖZÜM 1 NUMARA
+1. Ekteki dosyaların tamamını e-defter klasörü altına kopyalayıp kontrol edebilirsiniz.
+
+
+ftp://download.logo.com.tr/Windows/TOOLS/e-devlet-uygulamalari/EDEFTER/e-Defter_Imzalama/
+
+
+
+2. Aşağıdaki dosya ile kontrol etmenizi rica ederim.
+
+ftp://download.logo.com.tr/Windows/TOOLS/e-devlet-uygulamalari/EDEFTER/LbsEDefterWS/
+
+
+3.Yeni klasör açıp içerisine go3/edefter/utility klasöründeki dosyalar atılmalı. Edefter parametrelerinde oluşturulan klasör seçilmeli, aşağıdaki linkten xsd dosyası indirilmeli ve e-defter katoloğundaki xsd klasörü içerisindeki dosyalar değiştirilmeli. 
+
+ftp://download.logo.com.tr/Windows/TOOLS/e-devlet-uygulamalari/EDEFTER/
+
+Akis ve mali mühürü tekrardan yükleyip denemeleri iletildi. Makinanın tarih saatini atina +2 yapalım, javayı kaldıralım, makinayı restart edelim. Restart ettikten sonra makinanın tarih saatini manuel olarak güncel saate getirelim, sonra güncel javayı indirelim, dosya oluştur diyip kontrol etmenizi rica ederim.-Java 64 Bit ise Akis ’de 64 Bit olmalı
+-Java 32 Bit ise Akis ’de 32 Bit olmalı
+- Hatta işletim sitemi 64 Bit ise Java ve Akis 64 Bit olması daha sağlıklı sonuç verir.
+
+E-defter için gösterilen kataloğu görmüyor (erişim izni var mı, okuma ,yazma yetkisi kontrol edilebilir ) ya da katalogda dosyalar olmayabilir mi?
+
+Kontrol edilmesi rica edildi. Akis ve mali mühür driverını yükleyip kontrol ediniz. https://www.java.com/tr/download/help/manual_regedit.xml java register kayıtlarının temizlenmesi linkidir.
+Akis ve mali mühürü tekrardan yükleyip denemeleri iletildi.
+
