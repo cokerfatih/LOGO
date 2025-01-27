@@ -1,0 +1,11 @@
+sub ProcessEvent(App)
+ST_ClRef = App.Doc.FieldAsInteger("ARP_LOGICALREF")
+ST_CHRRef = CStr(ST_ClRef)
+BAKIYE = App.UQUERY_GETFLD(60,"SUM(DEBIT)-SUM(CREDIT)",24,6,FALSE,"CARDREF ="+ST_CHRRef+" AND TOTTYP = 1" )
+App.Doc.WriteStartElement "ADDITIONALDOCUMENTS/ADDITIONALDOCUMENT"
+App.Doc.WriteElementString "ID",Replace(cstr(BAKIYE),",",".")
+App.Doc.WriteElementString "ISSUEDATE", Year(Date) & "-" & Right("0" & Month(Date),2) & "-" & Right("0" & Day(Date), 2)
+App.Doc.WriteElementString "DOCUMENTTYPE", "BAKIYE"
+App.Doc.WriteEndElement
+App.Doc.SaveData
+end sub

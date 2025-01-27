@@ -1,0 +1,52 @@
+sub ProcessEvent(App)
+   
+    strDBUser   = "sa"            ' SQL Server kullanıcı adı
+    strDBPass   = "logo"            ' SQL Server kullanıcısının şifresi
+    strDBServer = "DESKTOP-ALFPG5M"            ' SQL Server adı
+    strDBName   = "LOGODB"            ' Veritabanı adı
+
+    
+    Set conn = CreateObject("ADODB.Connection")
+    conn.ConnectionString = "Provider=SQLOLEDB.1;Persist Security Info=False;User ID=" + strDBUser + ";Password=" + strDBPass + ";Initial Catalog=" + strDBName+ ";Data Source=" + strDBServer
+    conn.Open
+    Set rs = CreateObject("adodb.recordset")
+    rs.ActiveConnection = conn
+                                                             
+
+    intInvoiceRef = App.Doc.FieldAsInteger("DATA_REFERENCE") 'Faturanın LOGICALREF çekiliyor ve değişkene atanıyor.    
+    strInvoiceRef = CStr(intInvoiceRef)                      'Değişken string tipine çevriliyor.  
+      
+    strQuery = "SELECT rates2 FROM L_DAILYEXCHANGES D,LG_002_01_INVOICE I WHERE D.CRTYPE=20 AND CONVERT(VARCHAR, d.EDATE,101) =  CONVERT(VARCHAR, I.DATE_,101) AND I.LOGICALREF= " + strInvoiceRef 'Sorgu tırnaklar arasına yazılack.Faturanın LOGICALREF şu alan şeklinde.
+    rs.Open strQuery, conn      
+
+    strUsd = ""
+    do while (rs.EOF = false)
+       strUsd = rs.Fields(0).value  'sorgudan dönen değer strUsd değişkenine atandı.   
+       rs.MoveNext()                          
+    loop
+
+    rs.close            
+    conn.close
+
+   iyear  =  Year(Date())
+   imonth =  Month(Date())     
+   if imonth  < 10    then
+   imonth = "0" & imonth
+   end if
+     
+   iday = Day(Date()) 
+   if iday  < 10    then
+   iday = "0" & iday
+   end if  
+   idate =  iyear   & "-" &  imonth  & "-" &  iday
+
+ 
+      App.Doc.WriteStartElement "ADDITIONALDOCUMENTS/ADDITIONALDOCUMENT"  'UBL içerisine ADDITIONALDOCUMENTS oluşturuldu      
+
+      App.Doc.WriteElementString "ID", strUsd                             'ID'sine sorgudan dönen değer atandı.
+      App.Doc.WriteElementString "ISSUEDATE",  idate
+      App.Doc.WriteElementString "DOCUMENTTYPE", "EUROKUR"                 'XSLT geritmek için ayırtedici olsun diye döküman tipine USDKUR yazdırdık.
+      App.Doc.WriteEndElement   
+      App.Doc.SaveData          
+  
+end sub

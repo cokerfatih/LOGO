@@ -1,0 +1,9 @@
+													<xsl:for-each select="//n1:Invoice/cac:AdditionalDocumentReference">
+													<xsl:if test ="cbc:DocumentType = 'BAKIYE'">
+													<b>Son Cari Hesap Bakiyesi : </b>
+													<b>
+													<xsl:value-of select="cbc:ID"/>
+													</b>
+													<b> TL </b>
+													</xsl:if>
+								</xsl:for-each>

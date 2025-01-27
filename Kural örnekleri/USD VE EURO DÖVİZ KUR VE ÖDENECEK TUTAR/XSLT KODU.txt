@@ -1,0 +1,45 @@
+   <xsl:for-each select="//n1:Invoice/cac:AdditionalDocumentReference">
+				  
+									<xsl:if test="cbc:DocumentType = 'USDKUR' ">
+										<span style="font-weight:normal; ">
+										 <b><text>&#160;&#160;&#160;&#160;&#160;USD Döviz Kuru&#160;</text></b>
+											<xsl:value-of
+											select="cbc:ID"/>
+										</span>
+									</xsl:if>
+								</xsl:for-each>
+				  
+				    <xsl:for-each select="//n1:Invoice/cac:AdditionalDocumentReference">
+				  
+									<xsl:if test="cbc:DocumentType = 'USDTOTAL' ">
+										<span style="font-weight:normal; ">
+										 <b><text>&#160;&#160;&#160;&#160;&#160;USD Ödenecek Tutar&#160;</text></b>
+											<xsl:value-of
+											select="cbc:ID"/>
+										</span>
+									</xsl:if>
+								</xsl:for-each>
+							
+				   <xsl:for-each select="//n1:Invoice/cac:AdditionalDocumentReference">
+				  
+									<xsl:if test="cbc:DocumentType = 'EUROKUR' ">
+										<span style="font-weight:normal; ">
+										 <b><text>&#160;&#160;&#160;&#160;&#160;EURO Döviz Kuru&#160;</text></b>
+											<xsl:value-of
+											select="cbc:ID"/>
+										</span>
+									</xsl:if>
+								</xsl:for-each>
+								
+								
+									  <xsl:for-each select="//n1:Invoice/cac:AdditionalDocumentReference">
+				  
+									<xsl:if test="cbc:DocumentType = 'EUROTOTAL' ">
+										<span style="font-weight:normal; ">
+										 <b><text>&#160;&#160;&#160;&#160;&#160;EURO Ödenecek Tutar&#160;</text></b>
+											<xsl:value-of
+											select="cbc:ID"/>
+										</span>
+									</xsl:if>
+								</xsl:for-each>
+								

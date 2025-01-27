@@ -1,0 +1,39 @@
+sub ProcessEvent(App)
+  
+    strDBUser     = "sa"                  ' SQL Server kullanıcı adı
+    strDBPass     = "Yenikan2705"            ' SQL Server kullanıcısının şifresi
+    strDBServer  = "LOGOSRV"   ' SQL Server
+    strDBName   = "LOGO"             ' Veritabanı adı
+
+
+    Set conn = CreateObject("ADODB.Connection")
+    conn.ConnectionString = "Provider=SQLOLEDB.1;Persist Security Info=False;User ID=" + strDBUser + ";Password=" + strDBPass + ";Initial Catalog=" + strDBName+ ";Data Source=" + strDBServer
+    conn.Open
+    Set rs = CreateObject("adodb.recordset")
+    rs.ActiveConnection = conn
+    
+
+strQuery ="SELECT (SELECT  'DOLAR :'+CONVERT(VARCHAR,RATES1)  FROM LG_EXCHANGE_051 WHERE CONVERT(VARCHAR,EDATE,104)=(SELECT CONVERT(VARCHAR,GETDATE(),104)) AND CRTYPE=1) 'USDKUR',(SELECT  'EURO :'+CONVERT(VARCHAR,RATES1)  FROM LG_EXCHANGE_051 WHERE CONVERT(VARCHAR,EDATE,104)=(SELECT CONVERT(VARCHAR,GETDATE(),104)) AND CRTYPE=20) 'EURO'"
+	
+	
+    rs.Open strQuery, conn     
+
+        strDetayliBilgi1 = ""
+	strDetayliBilgi2 = ""
+	
+    do while (rs.EOF = false)
+       strDetayliBilgi1 = rs.Fields(0).value       
+       strDetayliBilgi2 = rs.Fields(1).value     
+       rs.MoveNext()                            
+    loop
+    
+    rs.close            
+    conn.close
+
+    App.Doc.ModifyData "NOTES6",strDetayliBilgi1
+    App.Doc.SaveData
+    App.Doc.ModifyData "NOTES7",strDetayliBilgi2
+    App.Doc.SaveData
+       
+
+end sub
