@@ -1,0 +1,3 @@
+IF([FİŞ TARİHİ_YIL]=2015,[D5],IF([FİŞ TARİHİ_YIL]=2016,[D6],IF([FİŞ TARİHİ_YIL]=2017,[D7],IF([FİŞ TARİHİ_YIL]=2018,[D8],IF([FİŞ TARİHİ_YIL]=2019,[D9],IF([FİŞ TARİHİ_YIL]=2020,[D10],IF([FİŞ TARİHİ_YIL]=2021,[D11],"0")))))))
+
+

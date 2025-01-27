@@ -1,0 +1,17 @@
+--if exists (select * from dbo.sysobjects where id = object_id(N'TG_TEST') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+--BEGIN
+--      drop table TG_TEST
+--END 
+--GO
+--SELECT 
+--      L.LOGICALREF,L.AMOUNT,L.ORDTRANSREF,L.DATE_,L.SOURCELINK, L.UINFO1, L.UINFO2 , 0 AS TG 
+--      INTO TG_TEST 
+--FROM 
+--      LG_021_01_STLINE L WITH(NOLOCK)
+--      LEFT OUTER JOIN LG_021_ITEMS I WITH(NOLOCK) ON L.STOCKREF=I.LOGICALREF AND L.LINETYPE NOT IN (2,3,4)
+--WHERE 
+--      (CANCELLED = 0) 
+--      AND (ORDTRANSREF <> 0) 
+--      AND L.LINETYPE NOT IN (2,3,4)
+--      AND I.CODE 
+--      LIKE '150.20.600030'  --- MALZEME KODUNA GÖRE
